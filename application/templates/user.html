@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% set active_page = 'users' %}
+{% block title %}{{ user.name | e }}'s Profile{% endblock %}
+
+{% block content %}
+    <a href="/users">< Back to all Users</a>
+    <h1>{{ user.name | e }}</h1>
+    <div id="name-div">
+        <p>I am {{ user.name | e }} <button id="edit-name">edit</button></p>
+    </div>
+
+    <div id="edit-name-div" class="d-none">
+        <form method="POST" action="/users/{{ user.id }}/edit">
+            {{ edit_form.hidden_tag() }}
+            {{ edit_form.name.label }} {{ edit_form.name }}
+            {{ edit_form.submit }}
+        </form>
+        <button id="cancel-edit-name">Cancel</button>
+    </div>
+    <p>I have {{ user.cats | length }} cat{% if user.cats | length != 1 %}s{% endif %}.</p>
+    {% if user.cats %}
+    <p>They are:</p>
+    <ul>
+        {% for cat in user.cats %}
+            <li><a href="/cats/{{ cat.id }}">{{ cat.name | e }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <p>I was created on {{ user.created_at.strftime('%Y-%m-%d') }} and last updated on {{ user.updated_at.strftime('%Y-%m-%d') }}</p>
+
+    <form method="POST" action="/users/{{ user.id }}/delete">
+        {{ delete_form.hidden_tag() }}
+        {{ delete_form.submit }}
+    </form>
+
+    <script src="{{url_for('static', filename='edit.js')}}"></script>
+{% endblock %}

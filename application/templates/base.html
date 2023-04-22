@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>Cat World - {% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css" />
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='cat.svg') }}">
+    </head>
+    <body>
+        <nav>
+            <a id="logo" href="/">
+                <img id="logo-img" src="{{ url_for('static', filename='cat.svg') }}">
+            </a>
+            {% set navigation_bar = [
+                ('/', 'index', 'Home'),
+                ('/users', 'users', 'Users'),
+                ('/cats', 'cats', 'Cats')
+            ] %}
+            {% set active_page = active_page | default('index') %}
+            <ul id="navigation">
+                {% for href, id, caption in navigation_bar %}
+                    <li{% if id == active_page %} class="active"{% endif %}>
+                        <a href="{{ href }}">{{ caption }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flashes fade">
+                    <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                    <button id="close-flashes">x</button>
+                </div>
+            {% endif %}
+        {% endwith %}
+        <section>
+            {% block content %}
+            {% endblock %}
+        </section>
+
+        <script src="{{url_for('static', filename='flash.js')}}"></script>
+    </body>
+</html>

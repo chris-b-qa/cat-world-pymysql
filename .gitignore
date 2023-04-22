@@ -1,0 +1,4 @@
+application/.env
+application/__pycache__
+instance
+.idea

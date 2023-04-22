@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block content %}
+    <h1>Welcome to Cat World!</h1>
+    <p>We have {{ users_count }} user{% if users_count != 1 %}s{% endif %} and {{ cats_count }} cat{% if cats_count != 1 %}s{% endif %}</p>
+    <h2>Here is a picture of a random cat:</h2>
+    <img src="https://cataas.com/cat" alt="A cat">
+
+    <h2>Add new User</h2>
+    <form method="POST" action="/users">
+        {{ user_form.hidden_tag() }}
+        {{ user_form.name.label }} {{ user_form.name }}
+        {{ user_form.submit }}
+    </form>
+
+    <h2>Add new Cat</h2>
+    {% if users_count %}
+    <form method="POST" action="/cats">
+        {{ cat_form.hidden_tag() }}
+        {{ cat_form.name.label }} {{ cat_form.name }}<br>
+        {{ cat_form.owner_id.label }}
+        <select name="{{ cat_form.owner_id.name }}" id="{{ cat_form.owner_id.id }}" {% if cat_form.owner_id.errors %}class="error"{% endif %}>
+            {% for option in cat_form.owner_id %}
+                {% if loop.first %}
+                    <option value="" disabled selected>Please select an owner:</option>
+                {% endif %}
+                {{ option }}
+            {% endfor %}
+        </select><br>
+        {% if cat_form.owner_id.errors %}
+            <ul class=errors>
+            {% for error in cat_form.owner_id.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {{ cat_form.submit }}
+    </form>
+    {% else %}
+        <p>Can't add Cats until we have some users!</p>
+    {% endif %}
+{% endblock %}

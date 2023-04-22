@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% set active_page = 'cats' %}
+{% block title %}Cats{% endblock %}
+
+{% block content %}
+    <h1>Cats</h1>
+    <p>
+        {% if cats | length == 1 %}
+            There is 1 cat.
+        {% else %}
+            There are {{ cats | length }} cats
+        {% endif %}
+    </p>
+
+    {% if cats %}
+        <p>They are:</p>
+        <ul>
+            {% for cat in cats %}
+            <li>
+                <a href="/cats/{{ cat.id }}">{{ cat.name | e }}</a> -
+                {% if cat.owner_name %}
+                    owned by {{ cat.owner_name | e }}
+                {% else %}
+                    currently an orphan :(
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
